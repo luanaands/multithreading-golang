@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/luanaands/multithreading-golang/internal/dto"
 	"github.com/luanaands/multithreading-golang/internal/infra/service"
@@ -29,6 +30,7 @@ func NewCepHandler(service service.CepInterface) *CepHandler {
 // @Failure 400 {object} map[string]string "CEP é obrigatório"
 // @Failure 404 {object} map[string]string "CEP não encontrado"
 // @Failure 500 {object} map[string]string "Erro interno"
+// @Failure 504 {object} map[string]string "Tempo de resposta esgotado"
 // @Router /cep [get]
 func (h *CepHandler) GetCep(w http.ResponseWriter, r *http.Request) {
 	brasilApiUrl := r.Context().Value("BrasilApHost").(string)
@@ -81,6 +83,11 @@ func (h *CepHandler) GetCep(w http.ResponseWriter, r *http.Request) {
 				Response: *res2,
 			}
 		}
+
+	case <-time.After(time.Second):
+		w.WriteHeader(http.StatusGatewayTimeout)
+		json.NewEncoder(w).Encode(map[string]string{"error": "Tempo de resposta esgotado"})
+		return
 	}
 
 	if result == nil {
