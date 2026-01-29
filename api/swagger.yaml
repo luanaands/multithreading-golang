@@ -1,0 +1,69 @@
+basePath: /
+definitions:
+  dto.CepResponse:
+    properties:
+      cep:
+        type: string
+      city:
+        description: localidade / city
+        type: string
+      neighborhood:
+        description: bairro / neighborhood
+        type: string
+      state:
+        description: uf / state
+        type: string
+      street:
+        description: logradouro / street
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: luanaands@gmail.com
+    name: Luana Andrade
+  description: API para consulta de CEP em paralelo (BrasilAPI + ViaCEP)
+  termsOfService: http://swagger.io/terms/
+  title: Desafio CEP API - golang
+  version: "1.0"
+paths:
+  /cep:
+    get:
+      consumes:
+      - application/json
+      description: Retorna dados do CEP consultando BrasilAPI e ViaCEP em paralelo
+      parameters:
+      - description: 'CEP sem formatação (ex: 01001000)'
+        in: query
+        name: cep
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: CEP encontrado
+          schema:
+            $ref: '#/definitions/dto.CepResponse'
+        "400":
+          description: CEP é obrigatório
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: CEP não encontrado
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Erro interno
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Buscar CEP
+      tags:
+      - CEP
+swagger: "2.0"

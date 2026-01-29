@@ -1,0 +1,102 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API para consulta de CEP em paralelo (BrasilAPI + ViaCEP)",
+        "title": "Desafio CEP API - golang",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Luana Andrade",
+            "email": "luanaands@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "paths": {
+        "/cep": {
+            "get": {
+                "description": "Retorna dados do CEP consultando BrasilAPI e ViaCEP em paralelo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEP"
+                ],
+                "summary": "Buscar CEP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CEP sem formatação (ex: 01001000)",
+                        "name": "cep",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CEP encontrado",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CepResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "CEP é obrigatório",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "CEP não encontrado",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CepResponse": {
+            "type": "object",
+            "properties": {
+                "cep": {
+                    "type": "string"
+                },
+                "city": {
+                    "description": "localidade / city",
+                    "type": "string"
+                },
+                "neighborhood": {
+                    "description": "bairro / neighborhood",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "uf / state",
+                    "type": "string"
+                },
+                "street": {
+                    "description": "logradouro / street",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
