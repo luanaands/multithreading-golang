@@ -48,7 +48,7 @@ func (h *CepHandler) GetCep(w http.ResponseWriter, r *http.Request) {
 	responseChannel2 := make(chan *dto.CepResponse)
 
 	go func() {
-		//time.Sleep(1 * time.Second) // Simula demora na resposta
+		//time.Sleep(2 * time.Second) // Simula demora na resposta
 
 		response, err := h.Service.GetBrasilApi(cep, brasilApiUrl)
 		if err != nil {
@@ -59,6 +59,7 @@ func (h *CepHandler) GetCep(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	go func() {
+		//time.Sleep(2 * time.Second) // Simula demora na resposta
 		response, err := h.Service.GetViaCep(cep, viaCepUrl)
 		if err != nil {
 			responseChannel2 <- nil
